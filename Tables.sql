@@ -1,12 +1,8 @@
-drop table secs;
-drop table offers;
 drop table course;
 drop table teaches;
 drop table takes;
 drop table section;
-drop table has;
 drop table student;
-drop table admins;
 drop table employs;
 drop table department;
 drop table faculty;
@@ -34,52 +30,15 @@ create table department(
     deptEmail varchar(20),
     deptPhone varchar(20),
     deptHead int,
-    foreign key(deptHead) references instructor(id)
-);
-
-create table admins(
     facName varchar(20),
-    dName varchar(20),
-    foreign key(facName) references faculty(facultyName),
-    foreign key(dName) references department(deptName)
+    foreign key(deptHead) references instructor(id),
+    foreign key(facName) references faculty(facultyName)
 );
 
 create table employs(
     insId int primary key,
     dName varchar(20),
     foreign key(insId) references instructor(id),
-    foreign key(dName) references department(deptName)
-);
-
-create table student(
-    sid int not null primary key,
-    sName varchar(20),
-    sPhone varchar(20),
-    sEmail varchar(20),
-    sDOB date,
-    sAddress varchar(50)
-);
-
-create table has(
-    sid int primary key,
-    dName varchar(20),
-    foreign key(sid) references student(sid),
-    foreign key(dName) references department(deptName)
-);
-
-create table course(
-    cCode varchar(20) not null primary key,
-    cName varchar(20),
-    year int,
-    semester int,
-    cCredit int,
-    cLevel varchar(20)
-);
-
-create table offers(
-    cCode varchar(20) primary key,
-    dName varchar(20),
-    foreign key(cCode) references course(cCode),
     foreign key(dName) references department(deptName)
 );
 
@@ -90,11 +49,15 @@ create table section(
     secRoom varchar(50)
 );
 
-create table teaches(
-    secId int,
-    insId int,
-    foreign key(secId) references section(secId),
-    foreign key(insId) references instructor(id)
+create table student(
+    sid int not null primary key,
+    sName varchar(20),
+    sPhone varchar(20),
+    sEmail varchar(20),
+    sDOB date,
+    sAddress varchar(50),
+    dName varchar(20),
+    foreign key(dName) references department(deptName)
 );
 
 create table takes(
@@ -105,9 +68,19 @@ create table takes(
     foreign key(secId) references section(secId)
 );
 
-create table secs(
+create table course(
+    cCode varchar(20) not null primary key,
+    cName varchar(20),
     secId int,
-    cCode varchar(20),
+    dName varchar(20),
+    cCredit int,
     foreign key(secId) references section(secId),
-    foreign key(cCode) references course(cCode)
+    foreign key(dName) references department(deptName)
+);
+
+create table teaches(
+    secId int,
+    insId int,
+    foreign key(secId) references section(secId),
+    foreign key(insId) references instructor(id)
 );
